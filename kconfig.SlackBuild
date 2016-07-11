@@ -35,9 +35,11 @@ PKG="${TMP}/package-${PRGNAM}"
 OUTPUT=${OUTPUT:-/tmp}
 SLACKVER_FILE='/etc/slackware-version'
 SLACKVER=$(sed -n 's/slackware \([0-9]\+\.[0-9]\+\)$/\1/ip' $SLACKVER_FILE)
-UPSTREAM_URL="http://download.kde.org/stable/frameworks/${VERSION%.*}/${PRGNAM}-${VERSION}.tar.xz"
+DOWNLOADS=(
+  "http://download.kde.org/stable/frameworks/${VERSION%.*}/${PRGNAM}-${VERSION}.tar.xz"
+)
 SOURCES=(
-  $(basename $UPSTREAM_URL)
+  $(basename ${DOWNLOADS[0]})
 )
 SHA256SUMS=(
   'bb57371d419457529450ba570cd2804ea127a451bfbd8e8d0cfc45cfa28982b5'  # extra-cmake-modules-5.24.0.tar.xz
@@ -54,8 +56,8 @@ fi
 
 if [[ 'yes' == $PREBUILD ]]
 then
-  test -n $UPSTREAM_URL
-  wget -N $UPSTREAM_URL
+  test -n ${DOWNLOADS[0]}
+  wget -N ${DOWNLOADS[0]}
 fi
 
 test ${SHA256SUMS[0]} == $(sha256sum ${SOURCES[0]} | awk '{print $1}')
