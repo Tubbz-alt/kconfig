@@ -91,7 +91,8 @@ case $ARCH in
       -DBUILD_TESTING=OFF
     ;;
   *)
-    echo "Unsupport arch \"${ARCH}\""
+    echo "Error: Unsupport arch \"${ARCH}\"" >&2
+    exit 1
     ;;
 esac
 
