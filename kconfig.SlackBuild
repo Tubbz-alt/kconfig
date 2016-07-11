@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+
+# Slackware build script for extra-cmake-modules
+
+# Copyright (c) 2016 Arondight, The Slackware Linux CN Community
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+set -e
+
+PREBUILD=${PREBUILD:-no}
+PKGTYPE=${PKGTYPE:-txz}
+PRGNAM='kconfig'
+VERSION=${VERSION:-5.24.0}
+BUILD=${BUILD:-1}
+TAG=${TAG:-_SBo}
+CWD=$(dirname $(readlink -f $0))
+TMP=${TMP:-/tmp/SBo}
+PKG="${TMP}/package-${PRGNAM}"
+OUTPUT=${OUTPUT:-/tmp}
+SLACKVER_FILE='/etc/slackware-version'
+SLACKVER=$(sed -n 's/slackware \([0-9]\+\.[0-9]\+\)$/\1/ip' $SLACKVER_FILE)
+UPSTREAM_URL="http://download.kde.org/stable/frameworks/${VERSION%.*}/${PRGNAM}-${VERSION}.tar.xz"
+SOURCES=(
+  $(basename $UPSTREAM_URL)
+)
+SHA256SUMS=(
+  'bb57371d419457529450ba570cd2804ea127a451bfbd8e8d0cfc45cfa28982b5'  # extra-cmake-modules-5.24.0.tar.xz
+)
+
+if [[ -z "$ARCH" ]]
+then
+  case "$(uname -m)" in
+    i?86) ARCH=i486 ;;
+    arm*) ARCH=arm ;;
+    *)    ARCH=$(uname -m) ;;
+  esac
+fi
+
+if [[ 'yes' == $PREBUILD ]]
+then
+  test -n $UPSTREAM_URL
+  wget -N $UPSTREAM_URL
+fi
+
+test ${SHA256SUMS[0]} == $(sha256sum ${SOURCES[0]} | awk '{print $1}')
+
+test -d $PKG && rm -rvf $PKG || :
+mkdir -pv $TMP $PKG $OUTPUT
+
+cd $TMP
+rm -rf $PRGNAM-$VERSION
+test -d "${PRGNAM}-${VERSION}" && rm -rvf "${PRGNAM}-${VERSION}" || :
+tar -Jxvf "${CWD}/${SOURCES[0]}"
+
+cd "${PRGNAM}-${VERSION}"
+mkdir -p ./build
+cd build
+case $ARCH in
+  *86)
+    cmake ..  \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DKDE_INSTALL_LIBDIR=lib  \
+      -DKDE_INSTALL_LIBEXECDIR=lib  \
+      -DBUILD_TESTING=OFF
+    ;;
+  *64)
+    cmake ..  \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DKDE_INSTALL_LIBDIR=lib64 \
+      -DKDE_INSTALL_LIBEXECDIR=lib64 \
+      -DBUILD_TESTING=OFF
+    ;;
+  *)
+    echo "Unsupport arch \"${ARCH}\""
+    ;;
+esac
+
+cmake --build .   \
+      --config Release  \
+      -- -j4
+make DESTDIR="${PKG}" install
+
+mkdir -pv "${PKG}/install"
+install -Dv -m 0644 "${CWD}/${PRGNAM}.SlackBuild" "${PKG}/usr/doc/${PRGNAM}-${VERSION}/${PRGNAM}.SlackBuild"
+install -Dv -m 0644 "${CWD}/slack-desc" "${PKG}/install/slack-desc"
+install -Dv -m 0755 "${CWD}/doinst.sh" "${PKG}/install/doinst.sh"
+
+cd $PKG
+/sbin/makepkg -l y -c n "${OUTPUT}/${PRGNAM}-${VERSION}-${ARCH}-${BUILD}${TAG}.${PKGTYPE:-tgz}"
+

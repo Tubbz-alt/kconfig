@@ -1,0 +1,11 @@
+PRGNAM="Extra modules and scripts for CMake"
+VERSION="5.24.0"
+HOMEPAGE="https://community.kde.org/Frameworks"
+DOWNLOAD="http://download.kde.org/stable/frameworks/5.24/extra-cmake-modules-5.24.0.tar.xz"
+MD5SUM="cd3b0c844234ad29cfdba89d63ccb2ae"
+DOWNLOAD_x86_64="http://download.kde.org/stable/frameworks/5.24/extra-cmake-modules-5.24.0.tar.xz"
+MD5SUM_x86_64="cd3b0c844234ad29cfdba89d63ccb2ae"
+REQUIRES="%README%"
+MAINTAINER="Arondight"
+EMAIL="shell_way@foxmail.com"
+
