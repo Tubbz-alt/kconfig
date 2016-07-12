@@ -6,7 +6,7 @@ This is [SlackBuild](http://docs.slackware.com/slackware:slackbuild_scripts) for
 
 See [kconfig.info](kconfig.info) and [slack-desc](slack-desc) for more info.
 
-## DEPENDENCIES
+## REQUIRES
 
 1. [extra-cmake-modules](https://github.com/slackwarecn/extra-cmake-modules.git)
 
