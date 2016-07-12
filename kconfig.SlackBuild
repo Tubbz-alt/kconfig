@@ -41,8 +41,8 @@ DOWNLOADS=(
 SOURCES=(
   $(basename ${DOWNLOADS[0]})
 )
-SHA256SUMS=(
-  'bb57371d419457529450ba570cd2804ea127a451bfbd8e8d0cfc45cfa28982b5'  # extra-cmake-modules-5.24.0.tar.xz
+MD5SUMS=(
+  'cd3b0c844234ad29cfdba89d63ccb2ae'  # extra-cmake-modules-5.24.0.tar.xz
 )
 
 if [[ -z "$ARCH" ]]
@@ -60,7 +60,8 @@ then
   wget -N ${DOWNLOADS[0]}
 fi
 
-test ${SHA256SUMS[0]} == $(sha256sum ${SOURCES[0]} | awk '{print $1}')
+test -r ${SOURCES[0]}
+test ${MD5SUMS[0]} == $(md5sum ${SOURCES[0]} | awk '{print $1}')
 
 test -d $PKG && rm -rvf $PKG || :
 mkdir -pv $TMP $PKG $OUTPUT
@@ -95,7 +96,6 @@ case $ARCH in
     exit 1
     ;;
 esac
-
 cmake --build .   \
       --config Release  \
       -- -j4
