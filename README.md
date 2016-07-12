@@ -2,9 +2,9 @@
 
 ## ABOUT
 
-Configuration system.
+This is [SlackBuild](http://docs.slackware.com/slackware:slackbuild_scripts) for KConfig.
 
-See [kconfig.info](kconfig.info) for more info.
+See [kconfig.info](kconfig.info) and [slack-desc](slack-desc) for more info.
 
 ## DEPENDENCIES
 
