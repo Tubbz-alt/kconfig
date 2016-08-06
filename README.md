@@ -8,13 +8,15 @@ See [kconfig.info](kconfig.info) and [slack-desc](slack-desc) for more info.
 
 ## REQUIRES
 
-1. [extra-cmake-modules](https://github.com/slackwarecn/extra-cmake-modules.git)
+1. [extra-cmake-modules](https://github.com/slackwarecn-slackbuilds/extra-cmake-modules.git)
 
 ## BUILD
 
 ```
-git clone https://github.com/slackwarecn/kconfig.git
+git clone https://github.com/slackwarecn-slackbuilds/kconfig.git
 cd kconfig
-PREBUILD=yes ./kconfig.SlackBuild
+source kconfig.info
+wget $DOWNLOAD
+./kconfig.SlackBuild
 ```
 

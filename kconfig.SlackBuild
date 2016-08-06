@@ -41,9 +41,6 @@ DOWNLOADS=(
 SOURCES=(
   $(basename ${DOWNLOADS[0]})
 )
-MD5SUMS=(
-  'e048b0684cbeba42a0d68461dd1bf3a9'  # extra-cmake-modules-5.24.0.tar.xz
-)
 
 if [[ -z "$ARCH" ]]
 then
@@ -53,17 +50,6 @@ then
     *)    ARCH=$(uname -m) ;;
   esac
 fi
-
-if [[ 'yes' == $PREBUILD ]]
-then
-  test -n ${DOWNLOADS[0]}
-  wget -N ${DOWNLOADS[0]}
-fi
-
-test -r ${SOURCES[0]}
-echo -ne "Verify ${SOURCES[0]}...\t"
-test ${MD5SUMS[0]} == $(md5sum ${SOURCES[0]} | awk '{print $1}')
-echo 'OK'
 
 test -d $PKG && rm -rvf $PKG || :
 mkdir -pv $TMP $PKG $OUTPUT
